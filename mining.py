@@ -5,8 +5,8 @@
 __author__ = 'Jodie Church, Tania Misquitta, Tracy Sallaway '
 __email__ = "jodie.church@mail.utoronto.ca, tania.misquitta@mail.utoronto.ca, tracy.armstrong@mail.utoronto.ca"
 
-__copyright__ = "2014 Susan Sim"
-__license__ = "MIT License"
+__copyright__ = "2014 JodieChurch_TaniaMisquitta_TracySallaway"
+__license__ = "Jodie_Tania_Tracy License"
 
 __status__ = "Prototype"
 
@@ -40,20 +40,24 @@ def read_stock_data(input_file):
         sales_tuple = (date, sales)
         monthly_volumes.append(volume_tuple)
         monthly_sales.append(sales_tuple)
+        averages_dict = defaultdict(float)  # to hold the running sum per date
+        sales_dict = defaultdict(float)
 
-    averages_dict = defaultdict(float)  # to hold the running sum per date
-    sales_dict = defaultdict(float)
 
-    for k, v in monthly_volumes:
-        averages_dict[k] += v  # add the volumes
-    for k, v in monthly_sales:
-        sales_dict[k] += v  # add the sales
-    for k, v in averages_dict.items():
-        averages_dict[k] = float("{0:.2f}".format(sales_dict[k] / averages_dict[k]))
+#add values to 'yyyy/mm' formatted month to get monthly volumes
+    for month, value in monthly_volumes:
+        averages_dict[month] += value
 
-    results_list = averages_dict.items()
+ #add values to 'yyyy/mm' formatted month to get monthly sales
+    for month, value in monthly_sales:
+        sales_dict[month] += value
 
-    return sorted(results_list, key=itemgetter(1))
+
+ #to calculate monthly averages for  'yyyy/mm' formatted month
+    for month, value in averages_dict.items():
+        averages_dict[month] = float("{0:.2f}".format(sales_dict[month] / averages_dict[month]))
+        results_list = averages_dict.items()
+        return sorted(results_list, key=itemgetter(1))
 
 
 def six_best_months(results_list):
