@@ -50,7 +50,7 @@ def read_stock_data(input_file):
 
  #add values to 'yyyy/mm' formatted month to get monthly sales
     for month, value in monthly_sales:
-        sales_dict[month] += value
+        sales_dict[month] += value  
 
 
  #to calculate monthly averages for  'yyyy/mm' formatted month
