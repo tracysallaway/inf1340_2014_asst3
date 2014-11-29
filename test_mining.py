@@ -5,8 +5,8 @@
 __author__ = 'Jodie Church, Tania Misquitta, Tracy Sallaway'
 __email__ = "jodie.church@mail.utoronto.ca, tania.misquitta@mail.utoronto.ca, tracy.armstrong@mail.utoronto.ca"
 
-__copyright__ = "2014 Susan Sim"
-__license__ = "MIT License"
+__copyright__ = "2014 JodieChurch_TaniaMisquitta_TracySallaway"
+__license__ = "Jodie_Tania_Tracy License"
 
 __status__ = "Prototype"
 
