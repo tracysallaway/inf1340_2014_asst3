@@ -7,7 +7,6 @@ __email__ = "jodie.church@mail.utoronto.ca, tania.misquitta@mail.utoronto.ca, tr
 
 __copyright__ = "2014 JodieChurch_TaniaMisquitta_TracySallaway"
 __license__ = "Jodie_Tania_Tracy License"
-
 __status__ = "Prototype"
 
 # imports one per line
@@ -18,18 +17,18 @@ from operator import itemgetter
 
 monthly_volumes = []
 monthly_sales = []
-file_name = "data/GOOG.json"
 
 
-def read_json_from_file(file_name):
+def read_stock_data(file_name):
+    """
+    Reads stock data from a JSON formatted file
+    :param file_name: The name of a JSON formatted file that contains stock data for analysis
+    :return: A list of tuples containing dates (month-year) and corresponding monthly stock averages
+    """
+
     with open(file_name, "r") as file_reader:
-        file_contents = file_reader.read()
-        input_file = json.loads(file_contents)
-
-    return input_file
-
-
-def read_stock_data(input_file):
+        input_file = file_reader.read()
+        input_file = json.loads(input_file)
 
     for i in range(len(input_file)):
         date = input_file[i]["Date"][:7]
@@ -40,9 +39,9 @@ def read_stock_data(input_file):
         sales_tuple = (date, sales)
         monthly_volumes.append(volume_tuple)
         monthly_sales.append(sales_tuple)
-        averages_dict = defaultdict(float)  # to hold the running sum per date
-        sales_dict = defaultdict(float)
 
+    averages_dict = defaultdict(float)  # to hold the running sum per date
+    sales_dict = defaultdict(float)
 
 #add values to 'yyyy/mm' formatted month to get monthly volumes
     for month, value in monthly_volumes:
@@ -50,8 +49,7 @@ def read_stock_data(input_file):
 
  #add values to 'yyyy/mm' formatted month to get monthly sales
     for month, value in monthly_sales:
-        sales_dict[month] += value  
-
+        sales_dict[month] += value
 
  #to calculate monthly averages for  'yyyy/mm' formatted month
     for month, value in averages_dict.items():
@@ -64,13 +62,6 @@ def six_best_months(results_list):
     results_list_best = sorted(results_list, key=itemgetter(1), reverse=True)[0:6]
     return results_list_best
 
-
 def six_worst_months(results_list):
     results_list_worst = sorted(results_list, key=itemgetter(1))[0:6]
     return results_list_worst
-
-input_file = read_json_from_file(file_name)
-results_list = read_stock_data(input_file)
-results_list_worst = six_worst_months(results_list)
-results_list_best = six_best_months(results_list)
-
