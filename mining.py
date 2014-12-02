@@ -10,10 +10,10 @@ __license__ = "Jodie_Tania_Tracy License"
 __status__ = "Prototype"
 
 # imports one per line
-import os
 import json
 from collections import defaultdict
 from operator import itemgetter
+
 
 def read_stock_data(file_name):
     """
@@ -24,6 +24,7 @@ def read_stock_data(file_name):
 
     monthly_volumes = []
     monthly_sales = []
+
     try:
         with open(file_name, "r") as file_reader:
             input_file = file_reader.read()
@@ -31,7 +32,7 @@ def read_stock_data(file_name):
     except FileNotFoundError:
         raise FileNotFoundError
     except ValueError:
-        raise ValueError("File content is incorrect")
+        raise ValueError("File content is invalid")
 
     for i in range(len(input_file)):
         date = input_file[i]["Date"][:7]
@@ -52,15 +53,31 @@ def read_stock_data(file_name):
     for month, sales in monthly_sales:
         sales_dict[month] += sales  # iterate and sum the sales
     for month, average in averages_dict.items():
-        averages_dict[month] = float("{0:.2f}".format(sales_dict[month] / averages_dict[month]))  # compute averages
-    results_list = averages_dict.items()
+        try:  # check for months where the sum of all volumes is zero
+            averages_dict[month] = float("{0:.2f}".format(sales_dict[month] / averages_dict[month]))  # compute average
+        except ZeroDivisionError:
+            averages_dict[month] = 0  # if division by zero occurs, set monthly average to 0 and continue
+    results_list = averages_dict.items()  # add dictionary items to results list
     return results_list  # return results as a list of tuples
 
+
 def six_best_months(results_list):
-    results_list_best = sorted(results_list, key=itemgetter(1), reverse=True)[0:6]
+    """
+    Receives a list of tuples containing dates and monthly stock averages, sorts in descending order and returns the
+    first six results in the list
+    :param results_list: list of tuples containing dates (month-year) and corresponding monthly stock averages
+    :return: results_list_best: list containing the top six results from the results list
+    """
+    results_list_best = sorted(results_list, key=itemgetter(1), reverse=True)[0:6]  # sort averages in descending order
     return results_list_best
 
-def six_worst_months(results_list):
-    results_list_worst = sorted(results_list, key=itemgetter(1))[0:6]
-    return results_list_worst
 
+def six_worst_months(results_list):
+    """
+    Receives a list of tuples containing dates and monthly stock averages, sorts in ascending order and returns the
+    first six results in the list
+    :param results_list: list of tuples containing dates (month-year) and corresponding monthly stock averages
+    :return: results_list_worst: list containing the top six results from the results list
+    """
+    results_list_worst = sorted(results_list, key=itemgetter(1))[0:6]  # sort averages in ascending order
+    return results_list_worst
