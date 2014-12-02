@@ -10,10 +10,10 @@ __license__ = "Jodie_Tania_Tracy License"
 __status__ = "Prototype"
 
 # imports one per line
+import os
 import json
 from collections import defaultdict
 from operator import itemgetter
-import os
 
 
 directory = "data"
@@ -27,7 +27,7 @@ for filename in os.listdir(directory):
         :param file_name: The name of a JSON formatted file that contains stock data for analysis
         :return: A list of tuples containing dates (month-year) and corresponding monthly stock averages
         """
-        
+
         monthly_volumes = []
         monthly_sales = []
 

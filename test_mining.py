@@ -16,7 +16,7 @@ from mining import *
 
 def test_filename():
     with pytest.raises(FileNotFoundError):
-        read_stock_data("")
+        read_stock_data("stock")
 
 
 def test_goog():
