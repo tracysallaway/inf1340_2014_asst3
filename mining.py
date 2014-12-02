@@ -15,53 +15,52 @@ import json
 from collections import defaultdict
 from operator import itemgetter
 
+def read_stock_data(file_name):
+    """
+    Reads stock data from a JSON formatted file and computes the average stock value for each month
+    :param file_name: The name of a JSON formatted file that contains stock data for analysis
+    :return: A list of tuples containing dates (month-year) and corresponding monthly stock averages
+    """
 
-directory = "data"
-for filename in os.listdir(directory):
-    file = filename
-    file_name = os.path.join(directory, file)
-
-    def read_stock_data(file_name):
-        """
-        Reads stock data from a JSON formatted file and computes the average stock value for each month
-        :param file_name: The name of a JSON formatted file that contains stock data for analysis
-        :return: A list of tuples containing dates (month-year) and corresponding monthly stock averages
-        """
-
-        monthly_volumes = []
-        monthly_sales = []
-
+    monthly_volumes = []
+    monthly_sales = []
+    try:
         with open(file_name, "r") as file_reader:
             input_file = file_reader.read()
             input_file = json.loads(input_file)
+    except FileNotFoundError:
+        raise FileNotFoundError
+    except ValueError:
+        raise ValueError("File content is incorrect")
 
-        for i in range(len(input_file)):
-            date = input_file[i]["Date"][:7]
-            volume = input_file[i]["Volume"]
-            close = input_file[i]["Close"]
-            sales = volume * close
-            volume_tuple = (date, volume)
-            sales_tuple = (date, sales)
-            monthly_volumes.append(volume_tuple)
-            monthly_sales.append(sales_tuple)
+    for i in range(len(input_file)):
+        date = input_file[i]["Date"][:7]
+        volume = input_file[i]["Volume"]
+        close = input_file[i]["Close"]
+        sales = volume * close
+        volume_tuple = (date, volume)
+        sales_tuple = (date, sales)
+        monthly_volumes.append(volume_tuple)
+        monthly_sales.append(sales_tuple)
 
-        averages_dict = defaultdict(float)  # to hold monthly averages
-        sales_dict = defaultdict(float)  # to hold monthly sales
+    averages_dict = defaultdict(float)  # to hold monthly averages
+    sales_dict = defaultdict(float)  # to hold monthly sales
 
-        # add volume and sales values to corresponding months in averages and sales dictionaries
-        for month, volume in monthly_volumes:
-            averages_dict[month] += volume  # iterate and sum the volumes
-        for month, sales in monthly_sales:
-            sales_dict[month] += sales  # iterate and sum the sales
-        for month, average in averages_dict.items():
-            averages_dict[month] = float("{0:.2f}".format(sales_dict[month] / averages_dict[month]))  # compute averages
-        results_list = averages_dict.items()
-        return results_list  # return results as a list of tuples
+    # add volume and sales values to corresponding months in averages and sales dictionaries
+    for month, volume in monthly_volumes:
+        averages_dict[month] += volume  # iterate and sum the volumes
+    for month, sales in monthly_sales:
+        sales_dict[month] += sales  # iterate and sum the sales
+    for month, average in averages_dict.items():
+        averages_dict[month] = float("{0:.2f}".format(sales_dict[month] / averages_dict[month]))  # compute averages
+    results_list = averages_dict.items()
+    return results_list  # return results as a list of tuples
 
-    def six_best_months(results_list):
-        results_list_best = sorted(results_list, key=itemgetter(1), reverse=True)[0:6]
-        return results_list_best
+def six_best_months(results_list):
+    results_list_best = sorted(results_list, key=itemgetter(1), reverse=True)[0:6]
+    return results_list_best
 
-    def six_worst_months(results_list):
-        results_list_worst = sorted(results_list, key=itemgetter(1))[0:6]
-        return results_list_worst
+def six_worst_months(results_list):
+    results_list_worst = sorted(results_list, key=itemgetter(1))[0:6]
+    return results_list_worst
+

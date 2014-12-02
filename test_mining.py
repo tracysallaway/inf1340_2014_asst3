@@ -18,6 +18,10 @@ def test_filename():
     with pytest.raises(FileNotFoundError):
         read_stock_data("stock")
 
+def test_fileformat():
+    with pytest.raises(ValueError):
+        read_stock_data("test.csv")
+
 
 def test_goog():
     read_stock_data("data/GOOG.json")
