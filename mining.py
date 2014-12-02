@@ -15,21 +15,21 @@ from collections import defaultdict
 from operator import itemgetter
 import os
 
-monthly_volumes = []
-monthly_sales = []
 
 directory = "data"
 for filename in os.listdir(directory):
     file = filename
-    file_name = os.path.join(directory,file)
-
+    file_name = os.path.join(directory, file)
 
     def read_stock_data(file_name):
         """
-        Reads stock data from a JSON formatted file
+        Reads stock data from a JSON formatted file and computes the average stock value for each month
         :param file_name: The name of a JSON formatted file that contains stock data for analysis
         :return: A list of tuples containing dates (month-year) and corresponding monthly stock averages
         """
+        
+        monthly_volumes = []
+        monthly_sales = []
 
         with open(file_name, "r") as file_reader:
             input_file = file_reader.read()
@@ -54,19 +54,14 @@ for filename in os.listdir(directory):
         for month, sales in monthly_sales:
             sales_dict[month] += sales  # iterate and sum the sales
         for month, average in averages_dict.items():
-            averages_dict[month] = float("{0:.2f}".format(sales_dict[month] / averages_dict[month]))  # calculate averages
+            averages_dict[month] = float("{0:.2f}".format(sales_dict[month] / averages_dict[month]))  # compute averages
         results_list = averages_dict.items()
-        return sorted(results_list, key=itemgetter(1))  # return results as a list sorted by average values
-
+        return results_list  # return results as a list of tuples
 
     def six_best_months(results_list):
         results_list_best = sorted(results_list, key=itemgetter(1), reverse=True)[0:6]
         return results_list_best
 
-
     def six_worst_months(results_list):
         results_list_worst = sorted(results_list, key=itemgetter(1))[0:6]
         return results_list_worst
-
-    #results_list = read_stock_data(file_name)
-    #print(six_best_months(results_list))
